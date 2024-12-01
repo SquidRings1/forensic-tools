@@ -1,0 +1,49 @@
+import os
+import csv
+
+print(os.getcwd())
+
+out_path = os.path.abspath(os.path.join(os.getcwd(), 'out'))
+out_file = os.path.join(out_path, 'malicious_files.csv')
+
+# List of known Windows processes
+known_processes = [
+    "System Idle Process", "System", "smss.exe", "csrss.exe", "wininit.exe",
+    "services.exe", "lsass.exe", "svchost.exe", "explorer.exe", "taskhost.exe",
+    "taskmgr.exe", "winlogon.exe", "dwm.exe", "spoolsv.exe", "ctfmon.exe", "System Idle Process", "System", "smss", "csrss", "wininit",
+    "services", "lsass", "svchost", "explorer", "taskhost",
+    "taskmgr", "winlogon", "dwm", "spoolsv", "ctfmon",
+    "chrome", "firefox", "notepad", "cmd", "powershell",
+    "conhost", "msedge", "opera", "iexplore", "mspaint",
+    "calc", "regedit", "taskschd", "mstsc", "mmc",
+    "devenv", "code", "pycharm", "idea", "eclipse",
+    "java", "python", "node", "npm", "git",
+    "bash", "zsh", "sh", "wsl", "docker",
+    "vagrant", "virtualbox", "vmware", "hyperv", "kvm"
+]
+
+def check_malicious_files(directory):
+    malicious_files = []
+
+    for _, _, files in os.walk(directory):
+        for file in files:
+            if not any(proc in file for proc in known_processes):
+                malicious_files.append(file)
+
+    if not os.path.exists(out_path):
+        os.makedirs(out_path)
+    if not os.path.isfile(out_file):
+        with open(out_file, mode='w', newline='') as csv_file:
+            fieldnames = ['malicious']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+    with open(out_file, mode='w', newline='') as csv_file:
+        fieldnames = ['malicious']
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for malicious_file in malicious_files:
+            writer.writerow({'malicious': malicious_file})
+
+if __name__ == "__main__":
+    directory = input("Enter the directory to check for malicious files: ")
+    check_malicious_files(directory)
