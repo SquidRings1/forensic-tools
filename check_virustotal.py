@@ -1,8 +1,6 @@
 import csv
 import requests
 
-# pip install requests
-
 API_KEY = 'YOUR_VIRUSTOTAL_API_KEY'
 CSV_FILE = '20241128_130748_TimelineExplorer_Export.csv'
 OUTPUT_FILE = 'virustotal_results.csv'
